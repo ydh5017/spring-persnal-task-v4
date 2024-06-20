@@ -1,7 +1,9 @@
 package com.sparta.codeplanet.product.entity;
 
+import com.sparta.codeplanet.global.enums.ErrorType;
 import com.sparta.codeplanet.global.enums.Status;
 import com.sparta.codeplanet.global.enums.UserRole;
+import com.sparta.codeplanet.global.exception.CustomException;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -43,4 +45,26 @@ public class User extends TimeStamp {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Status status;
+
+    /**
+     * 회원 상태 확인
+     */
+    public void verifyStatus() {
+        // 이미 승인된 회원
+        if (Status.ACTIVE.equals(this.status)) {
+            throw new CustomException(ErrorType.APPROVED_USER);
+        }
+        // 탈퇴한 회원
+        if (Status.DEACTIVATE.equals(this.status)) {
+            throw new CustomException(ErrorType.DEACTIVATED_USER);
+        }
+    }
+
+    /**
+     * 회원 상태 변경
+     * @param status
+     */
+    public void updateStatus(Status status) {
+        this.status = status;
+    }
 }
