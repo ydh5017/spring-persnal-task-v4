@@ -18,6 +18,9 @@ public class Company extends TimeStamp {
     @Column(nullable = false, unique = true)
     private String name;
 
+    @Column(nullable = false, unique = true)
+    private String domain;
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Status status;
