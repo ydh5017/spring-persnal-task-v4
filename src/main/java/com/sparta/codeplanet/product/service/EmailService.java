@@ -150,7 +150,7 @@ public class EmailService {
 
         User user = userService.getUserByEmail(email);
         // 회원 상태 확인
-        user.verifyStatus();
+        user.verifyStatusWhenEmailAuth();
 
         return user;
     }

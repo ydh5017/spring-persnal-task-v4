@@ -22,4 +22,9 @@ public class UserService {
         return userRepository.findByEmail(email).orElseThrow(
                 ()-> new CustomException(ErrorType.NOT_FOUND_USER));
     }
+
+    public User getUserById(Long userId) {
+        return userRepository.findById(userId).orElseThrow(
+                ()-> new CustomException(ErrorType.NOT_FOUND_USER));
+    }
 }

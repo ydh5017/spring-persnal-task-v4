@@ -4,8 +4,11 @@ import com.sparta.codeplanet.global.enums.ErrorType;
 import com.sparta.codeplanet.global.enums.Status;
 import com.sparta.codeplanet.global.enums.UserRole;
 import com.sparta.codeplanet.global.exception.CustomException;
+import com.sparta.codeplanet.product.dto.FollowResponseDto;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -46,13 +49,33 @@ public class User extends TimeStamp {
     @Enumerated(EnumType.STRING)
     private Status status;
 
+    @OneToMany(mappedBy = "from_user", fetch = FetchType.LAZY)
+    private List<Follow> followingList;
+
+    @OneToMany(mappedBy = "to_user", fetch = FetchType.LAZY)
+    private List<Follow> followerList;
+
     /**
-     * 회원 상태 확인
+     * 회원 상태 검증 (이메일 인증)
      */
-    public void verifyStatus() {
+    public void verifyStatusWhenEmailAuth() {
         // 이미 승인된 회원
         if (Status.ACTIVE.equals(this.status)) {
             throw new CustomException(ErrorType.APPROVED_USER);
+        }
+        // 탈퇴한 회원
+        if (Status.DEACTIVATE.equals(this.status)) {
+            throw new CustomException(ErrorType.DEACTIVATED_USER);
+        }
+    }
+
+    /**
+     * 회원 상태 검증 (팔로우)
+     */
+    public void verifyStatusWhenFollow() {
+        // 승인되지 않은 회원
+        if (Status.BEFORE_APPROVE.equals(this.status)) {
+            throw new CustomException(ErrorType.UNAPPROVED_USER);
         }
         // 탈퇴한 회원
         if (Status.DEACTIVATE.equals(this.status)) {
