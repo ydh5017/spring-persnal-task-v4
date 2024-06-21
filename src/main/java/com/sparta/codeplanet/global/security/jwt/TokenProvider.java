@@ -89,8 +89,9 @@ public class TokenProvider {
     }
 
     public String createRefreshToken(String username, UserRole role) {
-        return Jwts.builder()
+        return BEARER_PREFIX+ Jwts.builder()
                 .signWith(key, SIG)
+                .setSubject(username)
                 .claim(AUTHORIZATION_KEY, role)
                 .setIssuedAt(Timestamp.valueOf(LocalDateTime.now()))
                 .setExpiration(

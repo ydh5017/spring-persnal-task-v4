@@ -12,7 +12,7 @@ import com.sparta.codeplanet.global.exception.ExceptionDto;
 import com.sparta.codeplanet.global.security.UserDetailsImpl;
 import com.sparta.codeplanet.global.security.jwt.TokenProvider;
 import com.sparta.codeplanet.product.dto.LoginRequestDto;
-import com.sparta.codeplanet.product.dto.ResponseEntityDto;
+import com.sparta.codeplanet.product.repository.UserRefreshTokenRepository;
 import com.sparta.codeplanet.product.repository.UserRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
@@ -22,7 +22,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -42,6 +41,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final TokenProvider tokenProvider;
     private final UserRepository userRepository;
+    private final UserRefreshTokenRepository refreshTokenRepository;
     private final AuthenticationManager authenticationManager;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -55,9 +55,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     };
 
     public JwtAuthenticationFilter(TokenProvider tokenProvider, UserRepository userRepository,
+            UserRefreshTokenRepository userRefreshTokenRepository,
             AuthenticationManager authenticationManager) {
         this.tokenProvider = tokenProvider;
         this.userRepository = userRepository;
+        this.refreshTokenRepository = userRefreshTokenRepository;
         this.authenticationManager = authenticationManager;
     }
 
@@ -160,7 +162,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     // 로그인 요청 처리
     public void attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException, IOException, ServletException {
-        LoginRequestDto requestDto = new ObjectMapper().readValue(request.getInputStream(), LoginRequestDto.class);
+        LoginRequestDto requestDto = new ObjectMapper().readValue(request.getInputStream(),
+                LoginRequestDto.class);
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -173,10 +176,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     // 로그인 성공 처리
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, Authentication auth) throws IOException, ServletException {
+    protected void successfulAuthentication(HttpServletRequest request,
+            HttpServletResponse response, Authentication auth)
+            throws IOException, ServletException {
         UserDetailsImpl userDetails = (UserDetailsImpl) auth.getPrincipal();
         com.sparta.codeplanet.product.entity.User user = userDetails.getUser();
 
+        // 탈퇴한 유저는 로그인이 불가하게 만듭니다.
         if (Status.DEACTIVATE.equals(user.getStatus())) {
             throw new CustomException(ErrorType.DEACTIVATE_USER);
         }
@@ -190,23 +196,27 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         user.setRefresh(false);
         userRepository.save(user);
 
-        response.addHeader(AuthEnum.REFRESH_TOKEN.getValue(), accessToken);
+        response.addHeader(AuthEnum.ACCESS_TOKEN.getValue(), accessToken);
         response.addHeader(AuthEnum.REFRESH_TOKEN.getValue(), refreshToken);
 
         // 로그인 성공 메시지
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(new ObjectMapper().writeValueAsString(new ResponseEntityDto(SUCCESS_LOGIN, user)));
+        response.getWriter().write(new ObjectMapper().writeValueAsString(
+                SUCCESS_LOGIN));
         response.getWriter().flush();
     }
 
     // 로그인 실패 처리
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+    protected void unsuccessfulAuthentication(HttpServletRequest request,
+            HttpServletResponse response, AuthenticationException failed)
+            throws IOException, ServletException {
         ErrorType errorType = ErrorType.NOT_FOUND_AUTHENTICATION_INFO;
         response.setStatus(errorType.getHttpStatus().value());
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(new ObjectMapper().writeValueAsString(new ExceptionDto(errorType)));
+        response.getWriter()
+                .write(new ObjectMapper().writeValueAsString(new ExceptionDto(errorType)));
         response.getWriter().flush();
     }
 }

@@ -6,6 +6,7 @@ import com.sparta.codeplanet.global.security.filter.JwtAuthenticationFilter;
 import com.sparta.codeplanet.global.security.filter.JwtAuthorizationFilter;
 import com.sparta.codeplanet.global.security.filter.JwtExceptionFilter;
 import com.sparta.codeplanet.global.security.jwt.TokenProvider;
+import com.sparta.codeplanet.product.repository.UserRefreshTokenRepository;
 import com.sparta.codeplanet.product.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -35,10 +36,9 @@ public class SecurityConfig {
     private final AuthenticationEntryPoint entryPoint;
     private final UserDetailsServiceImpl userDetailsService;
     private final UserRepository userRepository;
+    private final UserRefreshTokenRepository userRefreshTokenRepository;
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-
-
 
     private final String[] WHITE_LIST = {"/users", "/user/login", "/feed/**"};
 
@@ -57,7 +57,7 @@ public class SecurityConfig {
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
-        return new JwtAuthenticationFilter(tokenProvider, userRepository, authenticationManager(authenticationConfiguration));
+        return new JwtAuthenticationFilter(tokenProvider, userRepository, userRefreshTokenRepository, authenticationManager(authenticationConfiguration));
     }
 
     @Bean
