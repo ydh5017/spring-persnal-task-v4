@@ -6,6 +6,7 @@ import com.sparta.codeplanet.global.enums.UserRole;
 import com.sparta.codeplanet.global.exception.CustomException;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.mapping.ToOne;
 
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class User extends TimeStamp {
     @Column(nullable = false, unique = true)
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "companyId", nullable = false)
     private Company company;
 

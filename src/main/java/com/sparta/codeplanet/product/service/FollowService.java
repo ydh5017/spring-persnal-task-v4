@@ -9,12 +9,14 @@ import com.sparta.codeplanet.product.entity.User;
 import com.sparta.codeplanet.product.repository.FollowRepository;
 import com.sparta.codeplanet.product.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class FollowService {
 
     private final UserService userService;
@@ -32,12 +34,12 @@ public class FollowService {
         toUser.verifyStatusWhenFollow();
 
         // 자기 자신 팔로우 시
-        if (fromUser.equals(toUser)) {
+        if (fromUser.getId().equals(toUser.getId())) {
             throw new CustomException(ErrorType.CANNOT_FOLLOW_MYSELF);
         }
         // 중복 팔로우 시
         if (followRepository.findByFromUserAndToUser(fromUser, toUser).isPresent()) {
-            throw new CustomException(ErrorType.DUPLICATE_ACCOUNT_ID);
+            throw new CustomException(ErrorType.DUPLICATE_FOLLOW);
         }
 
         Follow follow = Follow.builder()
@@ -71,7 +73,7 @@ public class FollowService {
                 .toList();
 
         // 로그인한 회원이 팔로잉 목록 회원들을 팔로우했는지 여부
-        followingList.forEach(response -> response.setFollowStatus(user.getEmail()));
+        followingList.forEach(response -> UserFollowedByLoggedInUser(response, user));
 
         return followingList;
     }
@@ -97,7 +99,7 @@ public class FollowService {
                 .toList();
 
         // 로그인한 회원이 팔로워 목록 회원들을 팔로우했는지 여부
-        followerList.forEach(response -> response.setFollowStatus(user.getEmail()));
+        followerList.forEach(response -> UserFollowedByLoggedInUser(response, user));
 
         return followerList;
     }
@@ -112,8 +114,30 @@ public class FollowService {
         User toUser = userService.getUserById(userId);
         toUser.verifyStatusWhenFollow();
 
-        followRepository.deleteByFromUserAndToUser(user, toUser);
+        log.info("deleteFollow : " + toUser.getNickname());
+
+        Follow follow = followRepository.findByFromUserAndToUser(user, toUser)
+                .orElseThrow(() -> new CustomException(ErrorType.NOT_FOLLOWING));
+
+        followRepository.delete(follow);
+
+        log.info("delete success");
 
         return toUser.getNickname();
+    }
+
+    /**
+     * 로그인한 회원과 조회된 회원의 팔로우 관계 확인
+     * @param response 팔로우 목록
+     * @param loggedInUser 로그인한 회원
+     */
+    private void UserFollowedByLoggedInUser(FollowResponseDto response, User loggedInUser) {
+        User user = userService.getUserById(response.getUserId());
+        if (loggedInUser.getId().equals(user.getId())) {
+            return;
+        }
+
+        response.setFollowStatus(
+                followRepository.findByFromUserAndToUser(loggedInUser, user).isPresent());
     }
 }

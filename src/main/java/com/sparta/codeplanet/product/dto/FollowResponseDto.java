@@ -19,17 +19,13 @@ public class FollowResponseDto {
         this.userName = user.getNickname();
         this.userIntro = user.getIntro();
         this.userEmail = user.getEmail();
+
     }
 
     /**
      * 팔로우 여부
-     * @param email 이메일
      */
-    public void setFollowStatus(String email) {
-        if (this.userEmail.equals(email)) {
-            this.followStatus = "Followed";
-        } else {
-            this.followStatus = "Not Followed";
-        }
+    public void setFollowStatus(boolean followStatus) {
+        this.followStatus = followStatus ? "Followed" : "Unfollowed";
     }
 }
