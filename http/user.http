@@ -1,0 +1,47 @@
+## Variables
+@username = abcdef12345
+@nickname = nickname
+@password = Abcdef12345!@#AS
+@email = wjdqlsdu388@gmail.com
+@intro = user1의 한줄소개
+
+# 테스트할때 아래 가입된 유저의 PK넘버가 1일수 있도록 테이블을 한번 드롭한 후 테스트해주세요.
+# 지금 편의상 id를 모두 1번을 넣어두어서 다른 테스트 후 삭제테스트를 진행하시거나 숫자를 바꾸면서 테스트해주세요.
+
+### 유저 회원 가입
+POST http://localhost:8080/users
+Content-Type: application/json
+
+{
+  "username":"{{username}}",
+  "nickname":"{{nickname}}",
+  "password":"{{password}}",
+  "email":"{{email}}",
+  "intro": "{{intro}}"
+}
+
+### 로그인
+POST http://localhost:8080/users/login
+Content-Type: application/json
+
+{
+  "username":"{{username}}",
+  "password":"{{password}}"
+}
+
+> {%
+  client.log(response.headers.valueOf("accessToken"));
+  client.log(response.headers.valueOf("refreshToken"));
+  client.global.set("accessToken", response.headers.valueOf("accessToken"));
+  client.global.set("refreshToken", response.headers.valueOf("refreshToken"));
+%}
+
+### 리프레시 토큰 테스트
+POST http://localhost:8080/users/reissue
+refresh-token:{{Refresh-Token}}
+
+> {%
+  client.global.set("Access-Token", response.headers.valueOf("Authorization"));
+  client.global.set("Refresh-Token", response.headers.valueOf("refresh-token"));
+%}
+
