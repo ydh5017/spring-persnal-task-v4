@@ -83,18 +83,20 @@ public class SecurityConfig {
         http.httpBasic(AbstractHttpConfigurer::disable);
 
         http
-            .authorizeHttpRequests(requests ->
-                requests.requestMatchers("/users", "/users/login", "/email/**").permitAll()	// requestMatchers의 인자로 전달된 url은 모두에게 허용
-                    .requestMatchers(HttpMethod.GET, "/feed/**").permitAll()
-                    .anyRequest().authenticated()	// 그 외의 모든 요청은 인증 필요
-            )
-            .sessionManagement(sessionManagement ->
-                sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            )   // 세션을 사용하지 않으므로 STATELESS 설정
-            .exceptionHandling(handler-> handler.authenticationEntryPoint(entryPoint))
-            .addFilterBefore(jwtAuthenticationFilter, BasicAuthenticationFilter.class)
-            .addFilterBefore(jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
-            .addFilterBefore(jwtExceptionFilter(), JwtAuthorizationFilter.class);
+                .authorizeHttpRequests(requests ->
+                        requests.requestMatchers("/users", "/users/login", "/email/**").permitAll()	// requestMatchers의 인자로 전달된 url은 모두에게 허용
+                                .requestMatchers(HttpMethod.GET, "/feed/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/users/{userId}/follower").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/users/{userId}/following").permitAll()
+                                .anyRequest().authenticated()	// 그 외의 모든 요청은 인증 필요
+                )
+                .sessionManagement(sessionManagement ->
+                        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )   // 세션을 사용하지 않으므로 STATELESS 설정
+                .exceptionHandling(handler-> handler.authenticationEntryPoint(entryPoint))
+                .addFilterBefore(jwtAuthenticationFilter, BasicAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtExceptionFilter(), JwtAuthorizationFilter.class);
 
         return http.build();
     }
