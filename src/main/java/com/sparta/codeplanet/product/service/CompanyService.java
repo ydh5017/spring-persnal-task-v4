@@ -17,10 +17,12 @@ public class CompanyService {
      * 등록된 도메인인지 확인
      * @param email 이메일
      */
-    public void verifyDomainOfEmail(String email) {
+    public Company verifyDomainOfEmail(String email) {
         String domain = email.substring(email.indexOf("@") + 1);
 
         Company company = companyRepository.findByDomain(domain).orElseThrow(
                 ()-> new CustomException(ErrorType.UNREGISTERED_DOMAIN));
+
+        return company;
     }
 }
