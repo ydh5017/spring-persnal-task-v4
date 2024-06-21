@@ -4,7 +4,7 @@ import com.sparta.codeplanet.global.enums.UserRole;
 
 public record SignInResponseDto(
         String username,
-//        UserRole role,
+        UserRole role,
         String accessToken,
         String refreshToken
 ) {
