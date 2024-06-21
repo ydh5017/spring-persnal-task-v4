@@ -20,7 +20,7 @@ public class User extends TimeStamp {
     @Column(nullable = false, unique = true)
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "companyId", nullable = false)
     private Company company;
 
