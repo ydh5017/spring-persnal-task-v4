@@ -49,9 +49,13 @@ public class FeedService {
     }
 
     @Transactional
-    public ResponseEntityDto<FeedResponseDto> updateFeed(Long feedId, FeedRequestDto requestDto) {
+    public ResponseEntityDto<FeedResponseDto> updateFeed(Long feedId, FeedRequestDto requestDto, User user) {
         Feed feed = feedRepository.findById(feedId)
             .orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_FEED));
+        // 작성자 본인만 수정 가능
+        if (!feed.getUser().getId().equals(user.getId())) {
+            throw new CustomException(ErrorType.NOT_AUTHORIZED_UPDATE);
+        }
         feed.update(requestDto.getTitle(), requestDto.getContent());
         FeedResponseDto feedResponse = new FeedResponseDto(feed);
         return new ResponseEntityDto<>(ResponseMessage.FEED_UPDATE_SUCCESS, feedResponse);
