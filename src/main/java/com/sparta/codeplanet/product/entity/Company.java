@@ -25,8 +25,4 @@ public class Company extends TimeStamp {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Status status;
-
-    @OneToOne(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
-    private User user; // 회사와 연관된 사용자
-
 }

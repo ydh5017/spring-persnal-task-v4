@@ -14,7 +14,8 @@ public enum ResponseMessage {
 
     FEED_UPDATE_SUCCESS("게시글을 수정하였습니다."),
     FEED_CREATE_SUCCESS("게시글을 작성하였습니다."),
-    FEED_DELETE_SUCCESS("게시글을 삭제하였습니다.");
+    FEED_DELETE_SUCCESS("게시글을 삭제하였습니다."),
+    FEED_READ_SUCCESS("게시물을 조회하였습니다.");
 
     private final String message;
 }
