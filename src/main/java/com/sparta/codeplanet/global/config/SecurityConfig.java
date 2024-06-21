@@ -73,7 +73,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http,
-            JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
+        JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
         /**
          *  폼을통한 로그인 방식 사용안함
          */
