@@ -3,7 +3,7 @@ POST http://localhost:8080/email
 Content-Type: application/json
 
 {
-  "email" : "ydh001027@gmail.com"
+  "email": "wjdqlsdu388@gmail.com"
 }
 
 ### 인증 코드 확인
@@ -11,6 +11,6 @@ POST http://localhost:8080/email/verify
 Content-Type: application/json
 
 {
-  "email" : "ydh001027@gmail.com",
+  "email": "wjdqlsdu388@gmail.com",
   "authCode": "qzhKdxPQ"
 }
