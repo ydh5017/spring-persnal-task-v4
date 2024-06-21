@@ -26,7 +26,7 @@ public class FollowController {
     @PostMapping("/follow/{userId}")
     public ResponseEntity<?> createFollow(@PathVariable Long userId) {
         // todo : security 구현 완료 시 파라미터에 UserDetails 추가
-        User user = new User();
+        User user = null;
 
         String followUsername = followService.createFollow(user, userId);
 
@@ -41,7 +41,7 @@ public class FollowController {
     @GetMapping("/{userId}/following")
     public ResponseEntity<?> getFollowingList(@PathVariable Long userId) {
         // todo : security 구현 완료 시 파라미터에 UserDetails 추가
-        User user = new User();
+        User user = null;
 
         List<FollowResponseDto> responseDtoList = followService.getFollowingList(user, userId);
 
@@ -51,13 +51,13 @@ public class FollowController {
 
     /**
      * 팔로워 목록 조회
-     * @param userId
-     * @return
+     * @param userId 팔로워 목록 조회할 회원 ID
+     * @return 팔로워 목록
      */
     @GetMapping("/{userId}/follower")
     public ResponseEntity<?> getFollowerList(@PathVariable Long userId) {
         // todo : security 구현 완료 시 파라미터에 UserDetails 추가
-        User user = new User();
+        User user = null;
 
         List<FollowResponseDto> responseDtoList = followService.getFollowerList(user, userId);
 
@@ -65,10 +65,15 @@ public class FollowController {
                 new ResponseEntityDto<>(ResponseMessage.FOLLOWER_LIST, responseDtoList));
     }
 
+    /**
+     * 팔로우 취소
+     * @param userId 팔로우 취소 당하는 회원
+     * @return 팔로우 취소 당하는 회원 이름
+     */
     @DeleteMapping("/follow/{userId}")
     public ResponseEntity<?> deleteFollow(@PathVariable Long userId) {
         // todo : security 구현 완료 시 파라미터에 UserDetails 추가
-        User user = new User();
+        User user = null;
 
         String unFollowUsername = followService.deleteFollow(user, userId);
 
