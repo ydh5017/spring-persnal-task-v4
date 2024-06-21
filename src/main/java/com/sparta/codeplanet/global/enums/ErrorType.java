@@ -23,7 +23,11 @@ public enum ErrorType {
     EXPIRED_AUTH_CODE(HttpStatus.LOCKED, "만료된 인증 코드입니다."),
 
     // company
-    UNREGISTERED_DOMAIN(HttpStatus.LOCKED, "등록되지 않은 도메인입니다.");
+    UNREGISTERED_DOMAIN(HttpStatus.LOCKED, "등록되지 않은 도메인입니다."),
+
+
+    // feed
+    NOT_FOUND_FEED(HttpStatus.LOCKED, "게시물을 찾을 수 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String message;

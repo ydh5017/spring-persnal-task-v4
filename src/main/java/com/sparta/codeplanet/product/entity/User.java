@@ -5,12 +5,13 @@ import com.sparta.codeplanet.global.enums.Status;
 import com.sparta.codeplanet.global.enums.UserRole;
 import com.sparta.codeplanet.global.exception.CustomException;
 import jakarta.persistence.*;
+import java.util.List;
 import lombok.*;
 
 @Entity
 @Getter
 @Setter
-@Table(name="User")
+@Table(name="user")
 @NoArgsConstructor
 @AllArgsConstructor
 public class User extends TimeStamp {
@@ -38,6 +39,9 @@ public class User extends TimeStamp {
 
     @Column(nullable = false, unique = true)
     private String email;
+
+    @OneToMany(mappedBy = "user")
+    private List<Feed> feeds;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
