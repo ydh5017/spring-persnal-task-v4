@@ -5,6 +5,7 @@ import com.sparta.codeplanet.global.exception.CustomException;
 import com.sparta.codeplanet.product.controller.EmailRequestDto;
 import com.sparta.codeplanet.product.dto.EmailResponseDto;
 import com.sparta.codeplanet.product.dto.EmailVerifyRequestDto;
+import com.sparta.codeplanet.product.entity.Company;
 import com.sparta.codeplanet.product.entity.Email;
 import com.sparta.codeplanet.product.entity.User;
 import com.sparta.codeplanet.product.repository.EmailRepository;
@@ -144,7 +145,7 @@ public class EmailService {
      */
     private User getVaildUser(String email) {
         // 등록된 도메인인지 확인
-        companyService.verifyDomainOfEmail(email);
+        Company com = companyService.verifyDomainOfEmail(email);
 
         User user = userService.getUserByEmail(email);
         // 회원 상태 확인

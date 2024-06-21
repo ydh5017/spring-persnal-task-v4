@@ -5,10 +5,7 @@ import com.sparta.codeplanet.global.enums.Status;
 import com.sparta.codeplanet.global.enums.UserRole;
 import com.sparta.codeplanet.global.exception.CustomException;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
@@ -45,7 +42,7 @@ public class User extends TimeStamp {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private UserRole userRole;
+    private UserRole userRole = UserRole.USER;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -56,6 +53,36 @@ public class User extends TimeStamp {
 
     @OneToMany(mappedBy = "toUser", fetch = FetchType.LAZY)
     private List<Follow> followerList;
+
+    @Column
+    private Boolean refresh;
+
+    @Builder
+    public User(String username,String nickname, String hashedPassword, String email,Company company, String intro, Status status) {
+        this.username = username;
+        this.password = hashedPassword;
+        this.nickname = nickname;
+        this.email = email;
+        this.company = company;
+        this.intro = intro;
+        this.status = status;
+    }
+    public void checkPassword(String password) {
+        if (!this.password.equals(password)) {
+            throw new IllegalArgumentException("패스워드가 다릅니다.");
+        }
+    }
+    // status를 수정하는 매서드 만들기
+    public void setStatus(String statusString) {
+        if (statusString.equals("탈퇴")) {
+            status = Status.DEACTIVATE;
+        }
+    }
+
+    public boolean setRefresh(Boolean refresh) {
+        this.refresh = refresh;;
+        return this.refresh;
+    }
 
     /**
      * 회원 상태 검증 (이메일 인증)
