@@ -4,16 +4,18 @@ import com.sparta.codeplanet.global.enums.ErrorType;
 import com.sparta.codeplanet.global.enums.Status;
 import com.sparta.codeplanet.global.enums.UserRole;
 import com.sparta.codeplanet.global.exception.CustomException;
-import com.sparta.codeplanet.product.dto.FollowResponseDto;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Entity
 @Getter
 @Table(name="User")
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class User extends TimeStamp {
 
@@ -49,10 +51,10 @@ public class User extends TimeStamp {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    @OneToMany(mappedBy = "from_user", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "fromUser", fetch = FetchType.LAZY)
     private List<Follow> followingList;
 
-    @OneToMany(mappedBy = "to_user", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "toUser", fetch = FetchType.LAZY)
     private List<Follow> followerList;
 
     /**
@@ -84,10 +86,16 @@ public class User extends TimeStamp {
     }
 
     /**
-     * 회원 상태 변경
-     * @param status
+     * 회원 상태 변경 (ACTIVE)
      */
-    public void updateStatus(Status status) {
-        this.status = status;
+    public void active() {
+        this.status = Status.ACTIVE;
+    }
+
+    /**
+     * 회원 상태 변경 (DEACTIVATE)
+     */
+    public void deactivate() {
+        this.status = Status.DEACTIVATE;
     }
 }

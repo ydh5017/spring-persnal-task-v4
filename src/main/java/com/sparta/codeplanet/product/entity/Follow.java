@@ -1,13 +1,11 @@
 package com.sparta.codeplanet.product.entity;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Follow extends TimeStamp {
 
     @Id
@@ -24,7 +22,7 @@ public class Follow extends TimeStamp {
     private User toUser;
 
     @Builder
-    public Follow(Long id, User fromUser, User toUser) {
+    public Follow(Long id, @NonNull User fromUser, @NonNull User toUser) {
         this.id = id;
         this.fromUser = fromUser;
         this.toUser = toUser;
