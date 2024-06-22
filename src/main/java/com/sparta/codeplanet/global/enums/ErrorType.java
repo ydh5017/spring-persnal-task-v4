@@ -38,6 +38,8 @@ public enum ErrorType {
     // likes
     SAME_USER_FEED(HttpStatus.LOCKED, "본인 게시글엔 누를 수 없습니다."),
     SAME_USER_REPLY(HttpStatus.LOCKED, "본인 댓글엔 누를 수 없습니다."),
+    NOT_FOUND_LIKE(HttpStatus.NOT_FOUND, "좋아요 정보를 찾을 수 없습니다."),
+    DUPLICATE_LIKE(HttpStatus.LOCKED, "좋아요 중복 등록"),
 
     // follow
     CANNOT_FOLLOW_MYSELF(HttpStatus.FORBIDDEN, "자기 자신을 팔로우 할 수 없습니다."),

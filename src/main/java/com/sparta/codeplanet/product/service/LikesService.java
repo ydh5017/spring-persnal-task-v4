@@ -33,9 +33,9 @@ public class LikesService {
             throw new CustomException(ErrorType.SAME_USER_FEED);
         }
 
-        /*
-        todo : 좋아요 중복 예외 처리 필요
-         */
+        if (feedLikesRepository.findByFeedIdAndUserId(feedId, userDetails.getUser().getId()).isPresent()) {
+            throw new CustomException(ErrorType.DUPLICATE_LIKE);
+        }
 
         feedLikesRepository.save(new FeedLikes(feed,userDetails.getUser()));
 
@@ -47,8 +47,9 @@ public class LikesService {
         Feed feed = feedRepository.findById(feedId)
             .orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_FEED));
 
-        FeedLikes feedLikes = feedLikesRepository.findByFeedIdAndUserId(feedId, userDetails.getUser()
-            .getId());
+        FeedLikes feedLikes = feedLikesRepository
+                .findByFeedIdAndUserId(feedId, userDetails.getUser().getId())
+                .orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_LIKE));
 
         feedLikesRepository.delete(feedLikes);
 
@@ -64,9 +65,9 @@ public class LikesService {
             throw new CustomException(ErrorType.SAME_USER_REPLY);
         }
 
-        /*
-        todo : 좋아요 중복 예외 처리 필요
-         */
+        if (replyLikesRepository.findByReplyIdAndUserId(replyId, userDetails.getUser().getId()).isPresent()) {
+            throw new CustomException(ErrorType.DUPLICATE_LIKE);
+        }
 
         replyLikesRepository.save(new ReplyLikes(reply,userDetails.getUser()));
 
@@ -78,8 +79,9 @@ public class LikesService {
         Reply reply = replyRepository.findById(replyId)
             .orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_REPLY));
 
-        ReplyLikes replyLikes = replyLikesRepository.findByReplyIdAndUserId(replyId, userDetails.getUser()
-            .getId());
+        ReplyLikes replyLikes = replyLikesRepository
+                .findByReplyIdAndUserId(replyId, userDetails.getUser().getId())
+                .orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_LIKE));
 
         replyLikesRepository.delete(replyLikes);
 
