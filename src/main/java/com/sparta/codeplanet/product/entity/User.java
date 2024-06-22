@@ -1,9 +1,7 @@
 package com.sparta.codeplanet.product.entity;
 
-import com.sparta.codeplanet.global.enums.ErrorType;
 import com.sparta.codeplanet.global.enums.Status;
 import com.sparta.codeplanet.global.enums.UserRole;
-import com.sparta.codeplanet.global.exception.CustomException;
 import jakarta.persistence.*;
 import lombok.*;
 
