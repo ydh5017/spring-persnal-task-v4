@@ -1,8 +1,9 @@
 package com.sparta.codeplanet.product.dto;
 
-import lombok.Getter;
+import lombok.*;
 
-@Getter
+
+@Data
 public class SignupRequestDto {
 
     private String username;
@@ -11,4 +12,6 @@ public class SignupRequestDto {
     private String email;
     private String companyId;
     private String intro;
+
+
 }

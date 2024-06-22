@@ -39,7 +39,7 @@ public class UserService {
         String intro = requestDto.getIntro();
 
 
-        // username 유효성 검사
+        // username 유효성 검사 -> DTO, 유저를 만들때 들어가는게 좋다
         if (!username.matches("^(?=.*[a-zA-Z])(?=.*\\d)[a-zA-Z\\d]{10,20}$")) {
             throw new IllegalArgumentException("아이디는 최소 10글자 이상, 20자 이하이며 대소문자 포함 영문 + 숫자만을 허용합니다.");
         }
@@ -80,5 +80,11 @@ public class UserService {
         userRepository.save(user);
      }
        return "정상 탈퇴!";
+ }
+
+ public void test(){
+
+
+
  }
 }

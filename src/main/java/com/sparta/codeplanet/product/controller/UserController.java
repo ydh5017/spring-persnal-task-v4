@@ -2,6 +2,7 @@ package com.sparta.codeplanet.product.controller;
 
 import com.sparta.codeplanet.product.dto.SignupRequestDto;
 import com.sparta.codeplanet.product.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -24,7 +25,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("")
-    public String signup(@RequestBody SignupRequestDto requestDto, BindingResult bindingResult) {
+    public String signup(@RequestBody @Valid SignupRequestDto requestDto, BindingResult bindingResult ) {
         /** Validation 예외처리  dto로처리할수있음**/
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
         if(fieldErrors.size() > 0) {
@@ -36,19 +37,16 @@ public class UserController {
 
         userService.signup(requestDto);
 
+
+
         return "login";
     }
 
     @PostMapping("users/logout")
-    public void logout() {
+    public void signout() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         SecurityContextHolder.clearContext();
         //토큰들어오면 수정
         //userService.deleteRefreshToken(authentication.getName());
     }
-
-
-
-
-
 }
