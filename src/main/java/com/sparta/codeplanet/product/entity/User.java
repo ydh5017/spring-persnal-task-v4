@@ -1,12 +1,15 @@
 package com.sparta.codeplanet.product.entity;
 
+import com.sparta.codeplanet.global.enums.ErrorType;
 import com.sparta.codeplanet.global.enums.Status;
 import com.sparta.codeplanet.global.enums.UserRole;
+import com.sparta.codeplanet.global.exception.CustomException;
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
 @Getter
+@Setter
 @Table(name="User")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -67,7 +70,7 @@ public class User extends TimeStamp {
     }
 
     // 유저로 받을 생성자
-    public User(String username,String nickname, String hashedPassword, String email,Company company, String intro) {
+    public User(String username, String nickname, String hashedPassword, String email, String company, String intro) {
         this.username = username;
         this.password = hashedPassword;
         this.nickname = nickname;
@@ -88,5 +91,10 @@ public class User extends TimeStamp {
         if (statusString.equals("탈퇴")) {
             status = Status.DEACTIVATE;
         }
+    }
+
+    //비밀번호 업데이트
+    public void updtePassword(String newPassword) {
+        this.password = newPassword;
     }
 }
