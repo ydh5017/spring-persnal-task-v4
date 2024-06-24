@@ -26,6 +26,27 @@ Content-Type: application/json
   client.global.set("refreshToken", response.headers.valueOf("refreshToken"));
 %}
 
+### 회원 프로필 수정
+PUT http://localhost:8080/users
+accessToken: {{accessToken}}
+Content-Type: application/json
+
+{
+  "intro":"update intro",
+  "nickname":"updateName",
+  "isTalTye": false
+}
+
+### 비밀번호 변경
+PATCH http://localhost:8080/users
+accessToken: {{accessToken}}
+Content-Type: application/json
+
+{
+  "currentPassword":"{{password}}",
+  "newPassword":"1qaz2wsx3edc!@#"
+}
+
 ### 리프레시 토큰 테스트
 POST http://localhost:8080/users/reissue
 refresh-token:{{Refresh-Token}}
@@ -49,5 +70,5 @@ Content-Type: application/json
 
 {
   "email": "{{email}}",
-  "authCode": "KvDzLb3y"
+  "authCode": "XJI2sS3k"
 }

@@ -20,5 +20,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException(String.format("This \"%s\" does not exist.", username)));
 
         return new UserDetailsImpl(user);
+
+
     }
 }

@@ -134,4 +134,13 @@ public class User extends TimeStamp {
             this.userRole = UserRole.USER;
         }
     }
+
+    public void updatePassword(String hashedPassword) {
+        this.password = hashedPassword;
+    }
+
+    public void updateProfile(String nickname, String intro) {
+        this.nickname = nickname;
+        this.intro = intro;
+    }
 }

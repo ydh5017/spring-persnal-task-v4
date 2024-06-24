@@ -1,5 +1,6 @@
 package com.sparta.codeplanet.product.dto;
 
+import lombok.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
@@ -7,7 +8,8 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 
-@Getter
+
+@Data
 public class SignupRequestDto {
 
     // 도메인 인증 과정 추가 -> email substring을 검증하고
@@ -23,4 +25,6 @@ public class SignupRequestDto {
     @Email
     private String email;
     private String intro;
+
+
 }

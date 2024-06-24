@@ -26,6 +26,9 @@ public enum ErrorType {
     // company
     UNREGISTERED_DOMAIN(HttpStatus.LOCKED, "등록되지 않은 도메인입니다."),
 
+    // user
+    ALREADY_TALYE_USER(HttpStatus.CONFLICT, "이미 탈퇴했어"),
+
     // feed
     NOT_FOUND_FEED(HttpStatus.LOCKED, "게시물을 찾을 수 없습니다."),
     NOT_AUTHORIZED_UPDATE(HttpStatus.LOCKED, "이 게시물을 수정할 권한이 없습니다."),
