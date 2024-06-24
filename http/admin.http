@@ -1,0 +1,12 @@
+## Variables
+@name = google
+@domain = gmail.com
+
+### 회사 등록
+POST http://localhost:8080/admin/company
+Content-Type: application/json
+
+{
+  "name": "{{name}}",
+  "domain": "{{domain}}"
+}
