@@ -126,4 +126,12 @@ public class User extends TimeStamp {
     public void deactivate() {
         this.status = Status.DEACTIVATE;
     }
+
+    public void updateRole() {
+        if (this.userRole == UserRole.USER) {
+            this.userRole = UserRole.ADMIN;
+        }else {
+            this.userRole = UserRole.USER;
+        }
+    }
 }

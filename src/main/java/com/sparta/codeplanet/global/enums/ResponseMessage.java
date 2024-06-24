@@ -30,7 +30,11 @@ public enum ResponseMessage {
     ADD_LIKE_TO_FEED_SUCCESS("피드 좋아요 성공"),
     CANCEL_LIKE_TO_FEED_SUCCESS("피드 좋아요 취소 성공"),
     ADD_LIKE_TO_REPLY_SUCCESS("댓글 좋아요 성공"),
-    CANCEL_LIKE_TO_REPLY_SUCCESS("댓글 좋아요 취소 성공"),;
+    CANCEL_LIKE_TO_REPLY_SUCCESS("댓글 좋아요 취소 성공"),
+
+    ADD_COMPANY_SUCCESS("회사 등록에 성공하였습니다."),
+    GET_ALL_USER("전체 회원 목록 조회"),
+    UPDATE_USER_ROLE("회원 권한 수정");
 
     private final String message;
 }
