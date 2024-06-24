@@ -9,16 +9,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/admin")
 @RequiredArgsConstructor
 @Slf4j
-public class AdminCotroller {
+public class AdminController {
 
     private final AdminService adminService;
 
@@ -26,14 +23,22 @@ public class AdminCotroller {
     public ResponseEntity<?> createCompany(
             @RequestBody CompanyRequestDto requestDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        log.info("createCompany@@@@");
 
-//        return ResponseEntity.ok(
-//                new ResponseEntityDto<>(
-//                        ResponseMessage.ADD_COMPANY_SUCCESS,
-//                        adminService.createCompany(requestDto, userDetails.getUser())
-//                )
-//        );
-        return ResponseEntity.ok("success");
+        return ResponseEntity.ok(
+                new ResponseEntityDto<>(
+                        ResponseMessage.ADD_COMPANY_SUCCESS,
+                        adminService.createCompany(requestDto, userDetails.getUser())
+                )
+        );
+    }
+
+    @PutMapping("/role/{userId}")
+    public ResponseEntity<?> updateRole(@PathVariable Long userId) {
+        return ResponseEntity.ok(
+                new ResponseEntityDto<>(
+                        ResponseMessage.UPDATE_USER_ROLE,
+                        adminService.updateRole(userId)
+                )
+        );
     }
 }

@@ -133,8 +133,6 @@ public class TokenProvider {
     }
 
     public boolean validateToken(String token) {
-        log.info("validateToken start");
-        log.info("token: {}", token);
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;

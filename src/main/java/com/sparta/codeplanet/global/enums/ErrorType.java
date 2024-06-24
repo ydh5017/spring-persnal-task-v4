@@ -44,7 +44,10 @@ public enum ErrorType {
     // follow
     CANNOT_FOLLOW_MYSELF(HttpStatus.FORBIDDEN, "자기 자신을 팔로우 할 수 없습니다."),
     DUPLICATE_FOLLOW(HttpStatus.LOCKED, "이미 팔로우한 회원입니다."),
-    NOT_FOLLOWING(HttpStatus.LOCKED, "팔로우 한 상태가 아닙니다.");
+    NOT_FOLLOWING(HttpStatus.LOCKED, "팔로우 한 상태가 아닙니다."),
+
+    // admin
+    NOT_EXIST_ALL_USERS(HttpStatus.BAD_REQUEST, "회원이 존재하지 않습니다.");
 
     private final HttpStatus httpStatus;
     private final String message;
