@@ -97,4 +97,12 @@ public class User extends TimeStamp {
     public void updtePassword(String newPassword) {
         this.password = newPassword;
     }
+
+    public void updateRole() {
+        if (this.userRole == UserRole.USER) {
+            this.userRole = UserRole.ADMIN;
+        }else {
+            this.userRole = UserRole.USER;
+        }
+    }
 }
