@@ -1,13 +1,17 @@
 package com.sparta.codeplanet.product.controller;
 
+import com.sparta.codeplanet.global.security.UserDetailsImpl;
 import com.sparta.codeplanet.product.dto.SignupRequestDto;
 import com.sparta.codeplanet.product.dto.UpdatePasswordReq;
 import com.sparta.codeplanet.product.service.UserService;
+import com.sparta.codeplanet.product.service.UserUpdateRequestDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
@@ -43,16 +47,21 @@ public class UserController {
         return "singup";
     }
 
-    @PostMapping("users/signout")
-    public void signout() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    @PutMapping
+    public ResponseEntity<?> updateProfile(
+            @RequestBody @Valid UserUpdateRequestDto requestDto,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity.ok(userService.updateProfile(userDetails.getUser().getId(), requestDto));
     }
 
-    @PatchMapping("")
-    public void updatePassword (@Valid @RequestBody UpdatePasswordReq updatePasswordReq) {
+    @PatchMapping
+    public ResponseEntity<?> updatePassword (
+            @Valid @RequestBody UpdatePasswordReq updatePasswordReq,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
-        userService.updatePassword(email, updatePasswordReq);
+        userService.updatePassword(userDetails.getUser(), updatePasswordReq);
+        return ResponseEntity.ok("Password updated");
     }
 
 }

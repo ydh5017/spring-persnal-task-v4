@@ -9,6 +9,7 @@ import com.sparta.codeplanet.product.entity.User;
 import com.sparta.codeplanet.product.entity.UserPasswordLog;
 import com.sparta.codeplanet.product.repository.UserPasswordLogRepersitory;
 import com.sparta.codeplanet.product.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,63 +24,41 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserPasswordLogRepersitory userPasswordLogRepersitory;
+    private final CompanyService companyService;
     private PasswordEncoder passwordEncoder;
 
-    /**
-     * 이메일로 회원 찾기
-     *
-     * @param email 이메일
-     * @return 회원
-     */
-    public User getUserByEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow(
-                () -> new CustomException(ErrorType.NOT_FOUND_USER));
-    }
-
-    public void signup(SignupRequestDto requestDto) {
-        String username = requestDto.getUsername();
-        String password = requestDto.getPassword();
-        String nickname = requestDto.getNickname();
-        String email = requestDto.getEmail();
-       // String companyId = requestDto.getCompanyId();
-        String intro = requestDto.getIntro();
-
-
-        // username 유효성 검사 -> DTO, 유저를 만들때 들어가는게 좋다
-        if (!username.matches("^(?=.*[a-zA-Z])(?=.*\\d)[a-zA-Z\\d]{10,20}$")) {
-            throw new IllegalArgumentException("아이디는 최소 10글자 이상, 20자 이하이며 대소문자 포함 영문 + 숫자만을 허용합니다.");
-        }
-
-        // password 유효성 검사
-        if (!password.matches("^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[!@#$%^&*()\\-_=+\\\\|\\[\\]{};:'\",.<>\\/?]).{10,}$")) {
-            throw new IllegalArgumentException("비밀번호는 최소 10자 이상, 대소문자 포함 영문 + 숫자 + 특수문자를 최소 1글자씩 포함해야 합니다.");
-        }
+    @Transactional
+    public User signup(SignupRequestDto requestDto) {
 
         // 회원 중복 확인
-        Optional<User> checkUserId = userRepository.findUserByUsername(username);
+        Optional<User> checkUserId = userRepository.findUserByUsername(requestDto.getUsername());
         if (checkUserId.isPresent()) {
             throw new IllegalArgumentException("중복된 아이디 입니다.");
         }
-//
-//        String hashedPassword = passwordEncoder.encode(password);
-//        User user = new User(username, hashedPassword, nickname, email, companyId, intro);
-//        userRepository.save(user);
-//        System.out.println(user);
+        // 사용자 등록
+        String hashedPassword = passwordEncoder.encode(requestDto.getPassword());
+        User user = User.builder()
+                .username(requestDto.getUsername())
+                .nickname(requestDto.getNickname())
+                .hashedPassword(hashedPassword)
+                .company(companyService.verifyDomainOfEmail(requestDto.getEmail()))
+                .email(requestDto.getEmail())
+                .intro(requestDto.getIntro())
+                .status(Status.BEFORE_APPROVE)
+                .build();
+
+        userRepository.save(user);
+        return user;
     }
 
     @Transactional
-    public String updateUser(Long id, UserUpdateRequestDto requestDto) {
+    public String updateProfile(Long id, UserUpdateRequestDto requestDto) {
         User user = userRepository.findById(id).orElseThrow(()-> new CustomException(ErrorType.NOT_FOUND_USER));
         //1. 프로필수정
         if(!requestDto.getIsTalTye()) {
-        String username = requestDto.getUsername();
-        String email = requestDto.getEmail();
         String nickname = requestDto.getNickname();
         String intro = requestDto.getIntro();
-        user.setUsername(username);
-        user.setEmail(email);
-        user.setNickname(nickname);
-        user.setIntro(intro);
+        user.updateProfile(nickname, intro);
         userRepository.save(user);
 
         return "수정성공";
@@ -105,17 +84,19 @@ public class UserService {
     }
 
     @Transactional
-    public void updatePassword(String email, UpdatePasswordReq updatePasswordReq) {
+    public void updatePassword(User user, UpdatePasswordReq updatePasswordReq) {
         // 1.이메일로 유저를 가져온다
         // 2.유저가 사용한 최근 3개의 비밀번호와 새로운 비밀번호 (newPassword) 가 일치하는지 알려준다. 일치하지 않으면 안돼 임마 보냄
         // 3.유저가 입력한 현재 비밀번호와 db에 있는 유저의 비밀번호가 일치한지 확인한다 일치 하지 않으면 안돼 임마를 보냄
         // 4.유저의 비밀번호를 수정한다
 
         // 1.이메일로 유저를 가져온다
-        User user = userRepository.findByEmail(email).orElseThrow(()-> new CustomException(ErrorType.NOT_FOUND_USER));
+        User updateUser = userRepository.findByEmail(user.getEmail())
+                .orElseThrow(()-> new CustomException(ErrorType.NOT_FOUND_USER));
 
         //2 이전 3개의 비밀번호와 newPassword랑 겹치는거 있는지 확인
-        List<UserPasswordLog> passwordLogs = userPasswordLogRepersitory.findTop3ByUserIdOrderByCreateAtDesc(user.getId());
+        List<UserPasswordLog> passwordLogs = userPasswordLogRepersitory
+                .findTop3ByUserIdOrderByCreateAtDesc(updateUser.getId());
 
         for(int i=0; i < passwordLogs.size(); i++) {
             UserPasswordLog passwordLog = passwordLogs.get(i);
@@ -124,7 +105,7 @@ public class UserService {
 
         //3.currentPassword 현재 user 패스워드 같은지 확인
         //3-1 지금 로그인한 유저의 비밀번호
-        String userPassword = user.getPassword();
+        String userPassword = updateUser.getPassword();
         String currentPassword = updatePasswordReq.getCurrentPassword();
 
         if(!userPassword.matches(currentPassword)) {
@@ -133,9 +114,34 @@ public class UserService {
 
         //4.드디어 비밀번호 바꿈 ㅜㅠ
         String hashedPassword = passwordEncoder.encode(updatePasswordReq.getNewPassword());
-        user.setPassword(hashedPassword);
-        userRepository.save(user);
+        updateUser.updatePassword(hashedPassword);
+        userRepository.save(updateUser);
     }
 
+    public User findUserByUsername(String username) {
+        return userRepository.findUserByUsernameAndStatus(username, Status.ACTIVE)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        String.format("User with username does not exist.")));
+    }
 
+    /**
+     * 이메일로 회원 찾기
+     *
+     * @param email 이메일
+     * @return 회원
+     */
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(
+                () -> new CustomException(ErrorType.NOT_FOUND_USER));
+    }
+
+    /**
+     * ID로 회원 찾기
+     * @param userId 회원 ID
+     * @return 회원
+     */
+    public User getUserById(Long userId) {
+        return userRepository.findById(userId).orElseThrow(
+                ()-> new CustomException(ErrorType.NOT_FOUND_USER));
+    }
 }

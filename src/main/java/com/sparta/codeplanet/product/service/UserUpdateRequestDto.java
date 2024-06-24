@@ -1,14 +1,13 @@
 package com.sparta.codeplanet.product.service;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
-@Setter
 public class UserUpdateRequestDto {
-    private String username;
-    private String email;
     private String intro;
+    @NotBlank
     private String nickname;
 
     // ture 들어오면 탈퇴
