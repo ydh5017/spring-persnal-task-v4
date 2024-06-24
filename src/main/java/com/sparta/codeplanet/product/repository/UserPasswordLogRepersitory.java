@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface UserPasswordLogRepersitory extends CrudRepository<UserPasswordLog, Long> {
 
-    List<UserPasswordLog> findTop3ByUserIdOrderByCreateAtDesc(Long userId);
+    List<UserPasswordLog> findTop3ByUserIdOrderByCreatedAtDesc(Long userId);
 }

@@ -25,7 +25,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserPasswordLogRepersitory userPasswordLogRepersitory;
     private final CompanyService companyService;
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public User signup(SignupRequestDto requestDto) {
@@ -35,8 +35,10 @@ public class UserService {
         if (checkUserId.isPresent()) {
             throw new IllegalArgumentException("중복된 아이디 입니다.");
         }
+
         // 사용자 등록
         String hashedPassword = passwordEncoder.encode(requestDto.getPassword());
+
         User user = User.builder()
                 .username(requestDto.getUsername())
                 .nickname(requestDto.getNickname())
@@ -96,7 +98,7 @@ public class UserService {
 
         //2 이전 3개의 비밀번호와 newPassword랑 겹치는거 있는지 확인
         List<UserPasswordLog> passwordLogs = userPasswordLogRepersitory
-                .findTop3ByUserIdOrderByCreateAtDesc(updateUser.getId());
+                .findTop3ByUserIdOrderByCreatedAtDesc(updateUser.getId());
 
         for(int i=0; i < passwordLogs.size(); i++) {
             UserPasswordLog passwordLog = passwordLogs.get(i);
@@ -108,13 +110,14 @@ public class UserService {
         String userPassword = updateUser.getPassword();
         String currentPassword = updatePasswordReq.getCurrentPassword();
 
-        if(!userPassword.matches(currentPassword)) {
+        if(!passwordEncoder.matches(currentPassword, userPassword)) {
             throw new RuntimeException();
         }
 
         //4.드디어 비밀번호 바꿈 ㅜㅠ
         String hashedPassword = passwordEncoder.encode(updatePasswordReq.getNewPassword());
         updateUser.updatePassword(hashedPassword);
+
         userRepository.save(updateUser);
     }
 
