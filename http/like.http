@@ -1,5 +1,5 @@
 ## Variables
-@feedId = 1
+@feedId = 6
 @replyId = 1
 
 ### 피드 좋아요 추가

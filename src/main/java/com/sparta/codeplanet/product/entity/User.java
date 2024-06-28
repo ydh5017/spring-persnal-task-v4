@@ -4,6 +4,7 @@ import com.sparta.codeplanet.global.enums.ErrorType;
 import com.sparta.codeplanet.global.enums.Status;
 import com.sparta.codeplanet.global.enums.UserRole;
 import com.sparta.codeplanet.global.exception.CustomException;
+import com.sparta.codeplanet.product.entity.likes.FeedLikes;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.mapping.ToOne;
@@ -54,6 +55,9 @@ public class User extends TimeStamp {
 
     @OneToMany(mappedBy = "toUser", fetch = FetchType.LAZY)
     private List<Follow> followerList;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<FeedLikes> feedLikes;
 
     @Column
     private Boolean refresh;

@@ -1,4 +1,4 @@
-package com.sparta.codeplanet.product.repository;
+package com.sparta.codeplanet.product.repository.feed;
 
 import com.sparta.codeplanet.product.entity.Company;
 import com.sparta.codeplanet.product.entity.Feed;
@@ -11,7 +11,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface FeedRepository extends JpaRepository<Feed,Long> {
+public interface FeedRepository extends JpaRepository<Feed,Long>, FeedRepositoryQuery {
 
     Page<Feed> findByUser_Company(Company company, Pageable pageable);
 

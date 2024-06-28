@@ -11,6 +11,7 @@ public class FeedResponseDto {
     private String content;
     private String user;
     private Status status;
+    private int likesCount;
 
     public FeedResponseDto(Feed feed) {
         this.id = feed.getId();
@@ -18,5 +19,6 @@ public class FeedResponseDto {
         this.content = feed.getContent();
         this.user = feed.getUser().getUsername();
         this.status = feed.getStatus();
+        this.likesCount = feed.getLikesCount();
     }
 }

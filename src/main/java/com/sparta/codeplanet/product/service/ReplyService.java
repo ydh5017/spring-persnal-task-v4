@@ -7,7 +7,7 @@ import com.sparta.codeplanet.product.dto.ReplyResponseDto;
 import com.sparta.codeplanet.product.entity.Feed;
 import com.sparta.codeplanet.product.entity.Reply;
 import com.sparta.codeplanet.product.entity.User;
-import com.sparta.codeplanet.product.repository.FeedRepository;
+import com.sparta.codeplanet.product.repository.feed.FeedRepository;
 import com.sparta.codeplanet.product.repository.ReplyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -64,4 +64,14 @@ public class ReplyService {
                 .toList();
     }
 
+    /**
+     * 댓글 단건 조회
+     * @param replyId 댓글 ID
+     * @return 댓글 정보
+     */
+    public ReplyResponseDto getReply(long replyId) {
+        return replyRepository.findById(replyId)
+                .map(ReplyResponseDto::new)
+                .orElseThrow(()-> new CustomException(ErrorType.NOT_FOUND_REPLY));
+    }
 }

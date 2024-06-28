@@ -18,14 +18,10 @@ public class LikesController {
     }
 
     @PostMapping("/likes")
-    public ResponseEntity<?> addLikesToFeed(@PathVariable("feedId") long feedId,
-                                                           @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<?> addLikesToFeed(
+            @PathVariable("feedId") long feedId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return ResponseEntity.ok(
-//            HttpResponseDto.builder()
-//                .statusCode(HttpStatus.OK.value())
-//                .message("이 피드 좋아요!")
-//                .data(likesService.likeFeed(feedId, userDetails))
-//                .build()
                 new ResponseEntityDto<>(
                         ResponseMessage.ADD_LIKE_TO_FEED_SUCCESS,
                         likesService.likeFeed(feedId, userDetails)
@@ -34,14 +30,10 @@ public class LikesController {
     }
 
     @DeleteMapping("/likes")
-    public ResponseEntity<?> subLikesToFeed(@PathVariable("feedId") long feedId,
-                                                          @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<?> subLikesToFeed(
+            @PathVariable("feedId") long feedId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return ResponseEntity.ok(
-//            HttpResponseDto.builder()
-//                .statusCode(HttpStatus.OK.value())
-//                .message("피드 좋아요 취소!")
-//                .data(likesService.unlikeFeed(feedId, userDetails))
-//                .build()
                 new ResponseEntityDto<>(
                         ResponseMessage.CANCEL_LIKE_TO_FEED_SUCCESS,
                         likesService.unlikeFeed(feedId, userDetails)
@@ -50,15 +42,11 @@ public class LikesController {
     }
 
     @PostMapping("/reply/{replyId}/likes")
-    public ResponseEntity<?> addLikesToReply(@PathVariable("feedId") long feedId,
-        @PathVariable("replyId") int replyId,
-        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<?> addLikesToReply(
+            @PathVariable("feedId") long feedId,
+            @PathVariable("replyId") int replyId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return ResponseEntity.ok(
-//            HttpResponseDto.builder()
-//                .statusCode(HttpStatus.OK.value())
-//                .message("이 댓글 좋아요!")
-//                .data(likesService.likeReply(replyId, userDetails))
-//                .build()
                 new ResponseEntityDto<>(
                         ResponseMessage.ADD_LIKE_TO_REPLY_SUCCESS,
                         likesService.likeReply(replyId, userDetails)
@@ -67,15 +55,11 @@ public class LikesController {
     }
 
     @DeleteMapping("/reply/{replyId}/likes")
-    public ResponseEntity<?> subLikesToReply(@PathVariable("feedId") long feedId,
-        @PathVariable("replyId") int replyId,
-        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<?> subLikesToReply(
+            @PathVariable("feedId") long feedId,
+            @PathVariable("replyId") int replyId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return ResponseEntity.ok(
-//            HttpResponseDto.builder()
-//                .statusCode(HttpStatus.OK.value())
-//                .message("댓글 좋아요 취소!")
-//                .data(likesService.unlikeReply(replyId, userDetails))
-//                .build()
                 new ResponseEntityDto<>(
                         ResponseMessage.CANCEL_LIKE_TO_REPLY_SUCCESS,
                         likesService.unlikeReply(replyId, userDetails)

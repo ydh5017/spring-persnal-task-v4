@@ -3,14 +3,10 @@ package com.sparta.codeplanet.product.service;
 import com.sparta.codeplanet.global.enums.ErrorType;
 import com.sparta.codeplanet.global.enums.ResponseMessage;
 import com.sparta.codeplanet.global.exception.CustomException;
-import com.sparta.codeplanet.product.dto.FeedRequestDto;
-import com.sparta.codeplanet.product.dto.FeedResponseDto;
-import com.sparta.codeplanet.product.dto.GroupFeedResponseDto;
-import com.sparta.codeplanet.product.dto.ResponseEntityDto;
+import com.sparta.codeplanet.product.dto.*;
 import com.sparta.codeplanet.product.entity.Feed;
-import com.sparta.codeplanet.product.entity.Follow;
 import com.sparta.codeplanet.product.entity.User;
-import com.sparta.codeplanet.product.repository.FeedRepository;
+import com.sparta.codeplanet.product.repository.feed.FeedRepository;
 import com.sparta.codeplanet.product.repository.UserRepository;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -58,6 +54,17 @@ public class FeedService {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
         return feedRepository.findAll(pageable)
             .map(FeedResponseDto::new); // `Page<Feed>`를 `Page<FeedResponseDto>`로 변환
+    }
+
+    /**
+     * 게시글 단건 조회
+     * @param feedId 게시글 ID
+     * @return 게시글 정보
+     */
+    public FeedResponseDto getFeed(Long feedId) {
+        return feedRepository.findById(feedId)
+                .map(FeedResponseDto::new)
+                .orElseThrow(()-> new CustomException(ErrorType.NOT_FOUND_FEED));
     }
 
     /**
@@ -150,5 +157,10 @@ public class FeedService {
                 .stream()
                 .map(FeedResponseDto::new)
                 .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public Page<FeedResponseDto> getLikeFeeds(PageDTO page, User user) {
+        return feedRepository.getLikeFeeds(user, page.toPageable()).map(FeedResponseDto::new);
     }
 }

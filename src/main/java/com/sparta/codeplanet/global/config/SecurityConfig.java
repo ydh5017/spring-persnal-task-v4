@@ -85,10 +85,13 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(requests ->
                         requests.requestMatchers("/users", "/users/login", "/email/**").permitAll()	// requestMatchers의 인자로 전달된 url은 모두에게 허용
-                                .requestMatchers(HttpMethod.GET, "/feed/**").permitAll()
+                                .requestMatchers("/feed").permitAll()
+                                .requestMatchers("/feed/{feedId}").permitAll()
+                                .requestMatchers("/feed/group").permitAll()
+                                .requestMatchers("/feed/following").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/users/{userId}/follower").permitAll() // 팔로워 조회
                                 .requestMatchers(HttpMethod.GET, "/users/{userId}/following").permitAll() // 팔로잉 조회
-                                .requestMatchers(HttpMethod.GET, "/feed/{{feedId}}/reply").permitAll() // 댓글 조회
+                                .requestMatchers(HttpMethod.GET, "/feed/{{feedId}}/reply/**").permitAll() // 댓글 조회
                                 .requestMatchers("/admin/**").hasAnyRole("ADMIN") // admin
                                 .anyRequest().authenticated()	// 그 외의 모든 요청은 인증 필요
                 )

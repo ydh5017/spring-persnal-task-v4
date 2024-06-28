@@ -17,6 +17,10 @@ Content-Type: application/json
 GET http://localhost:8080/feed/{{feedId}}/reply
 accessToken: {{accessToken}}
 
+### 댓글 단건 조회
+GET http://localhost:8080/feed/{{feedId}}/reply/{{replyId}}
+accessToken: {{accessToken}}
+
 ### 댓글 수정
 PATCH http://localhost:8080/feed/{{feedId}}/reply/{{replyId}}
 accessToken: {{accessToken}}

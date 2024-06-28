@@ -3,11 +3,7 @@ package com.sparta.codeplanet.product.controller;
 
 import com.sparta.codeplanet.global.enums.ResponseMessage;
 import com.sparta.codeplanet.global.security.UserDetailsImpl;
-import com.sparta.codeplanet.product.dto.FeedRequestDto;
-import com.sparta.codeplanet.product.dto.FeedResponseDto;
-import com.sparta.codeplanet.product.dto.GroupFeedResponseDto;
-import com.sparta.codeplanet.product.dto.PageableResponse;
-import com.sparta.codeplanet.product.dto.ResponseEntityDto;
+import com.sparta.codeplanet.product.dto.*;
 import com.sparta.codeplanet.product.service.FeedService;
 import java.util.List;
 import org.springframework.data.domain.Page;
@@ -61,9 +57,24 @@ public class FeedController {
         PageableResponse<FeedResponseDto> responseEntity = new PageableResponse<>(responseDto);
         return ResponseEntity.ok(responseEntity);
     }
+
+    /**
+     * 게시글 단건 조회
+     * @param feedId 게시글 ID
+     * @return 게시글 정보
+     */
+    @GetMapping("/{feedId}")
+    public ResponseEntity<?> getFeed(@PathVariable Long feedId) {
+        return ResponseEntity.ok(
+                new ResponseEntityDto<>(
+                        ResponseMessage.FEED_READ_SUCCESS,
+                        feedService.getFeed(feedId)
+                )
+        );
+    }
     
     /**
-     * 게시물 조회
+     * 게시물 수정
      * @param requestDto 게시물 정보
      * @return 게시물 수정 내용 반환
      */
@@ -104,6 +115,13 @@ public class FeedController {
         return ResponseEntity.ok(responseDto);
     }
 
+    /**
+     * 팔로잉하는 회원의 게시글 조회
+     * @param userDetails 회원 정보
+     * @param page 페이지
+     * @param size 크기
+     * @return 게시글 목록
+     */
     @GetMapping("/following")
     public ResponseEntity<?> getFollowingFeed(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
@@ -111,5 +129,30 @@ public class FeedController {
             @RequestParam(defaultValue = "5") int size) {
         List<FeedResponseDto> responseDtoList = feedService.getFollowingFeed(userDetails.getUser(), page, size);
         return ResponseEntity.ok(responseDtoList);
+    }
+
+    /**
+     * 회원이 좋아요한 게시글 목록 조회
+     * @param page 페이지
+     * @param userDetails 회원 정보
+     * @return 게시글 목록
+     */
+    @GetMapping("/like")
+    public ResponseEntity<?> getLikeFeeds(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "5") int size,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity.ok(
+                new ResponseEntityDto<>(
+                        ResponseMessage.FEED_READ_SUCCESS,
+                        feedService.getLikeFeeds(
+                                PageDTO.builder()
+                                        .page(page)
+                                        .size(size)
+                                        .build(),
+                                userDetails.getUser()
+                        )
+                )
+        );
     }
 }

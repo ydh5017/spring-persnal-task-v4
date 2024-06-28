@@ -33,14 +33,6 @@ public class ReplyController {
     public ResponseEntity<?> createReply(@PathVariable("feedId") long feedId,
         @RequestBody ReplyRequestDto replyRequestDto,
         @AuthenticationPrincipal UserDetailsImpl userDetails) {
-
-//        return ResponseEntity.ok(
-//            HttpResponseDto.builder()
-//                .statusCode(HttpStatus.OK.value())
-//                .message("댓글 작성 완료")
-//                .data(replyService.createReply(feedId, replyRequestDto, userDetails.getUser()))
-//                .build()
-//        );
         return ResponseEntity.ok(
                 new ResponseEntityDto<>(
                         ResponseMessage.ADD_REPLY_SUCCESS,
@@ -59,27 +51,35 @@ public class ReplyController {
         List<ReplyResponseDto> replies = replyService.findRepliesAll(feedId);
         if (replies.isEmpty()) {
             return ResponseEntity.ok(
-//                HttpResponseDto.builder()
-//                    .statusCode(HttpStatus.OK.value())
-//                    .message("댓글이 없습니다.")
-//                    .build()
                     new ResponseEntityDto<>(
                             ResponseMessage.NO_EXIST_REPLY
                     )
             );
         } else {
             return ResponseEntity.ok(
-//                HttpResponseDto.builder()
-//                    .statusCode(HttpStatus.OK.value())
-//                    .message("댓글 조회 완료")
-//                    .data(replies)
-//                    .build()
                     new ResponseEntityDto<>(
                             ResponseMessage.REPLY_READ_SUCCESS,
                             replies
                     )
             );
         }
+    }
+
+    /**
+     * 댓글 단건 조회
+     * @param replyId 댓글 ID
+     * @return 댓글 정보
+     */
+    @GetMapping("/reply/{replyId}")
+    public ResponseEntity<?> getReply(
+            @PathVariable("feedId") long feedId,
+            @PathVariable("replyId") long replyId) {
+        return ResponseEntity.ok(
+                new ResponseEntityDto<>(
+                        ResponseMessage.REPLY_READ_SUCCESS,
+                        replyService.getReply(replyId)
+                )
+        );
     }
 
 
@@ -96,10 +96,6 @@ public class ReplyController {
         @AuthenticationPrincipal UserDetailsImpl userDetails) {
         replyService.deleteReply(feedId, replyId, userDetails.getUser());
         return ResponseEntity.ok(
-//            HttpResponseDto.builder()
-//                .statusCode(HttpStatus.OK.value())
-//                .message("댓글 삭제 완료")
-//                .build()
                 new ResponseEntityDto<>(
                         ResponseMessage.REPLY_DELETE_SUCCESS
                 )
@@ -120,11 +116,6 @@ public class ReplyController {
         @RequestBody ReplyRequestDto requestDto,
         @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return ResponseEntity.ok(
-//            HttpResponseDto.builder()
-//                .statusCode(HttpStatus.OK.value())
-//                .message("댓글 수정이 완료되었습니다.")
-//                .data(replyService.updateReply(feedId, replyId, requestDto, userDetails.getUser()))
-//                .build()
                 new ResponseEntityDto<>(
                         ResponseMessage.REPLY_UPDATE_SUCCESS,
                         replyService.updateReply(feedId, replyId, requestDto, userDetails.getUser())

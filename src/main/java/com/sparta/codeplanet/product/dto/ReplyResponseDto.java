@@ -14,7 +14,7 @@ public class ReplyResponseDto {
     private long userId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private int likeCount;
+    private int likesCount;
 
     public ReplyResponseDto(Reply reply) {
         this.id = reply.getId();
@@ -23,7 +23,7 @@ public class ReplyResponseDto {
         this.updatedAt = reply.getUpdatedAt();
         this.feedId = reply.getFeed().getId();
         this.userId = reply.getUser().getId();
-        this.likeCount = reply.getLikesCount();
+        this.likesCount = reply.getLikesCount();
     }
 
 }
