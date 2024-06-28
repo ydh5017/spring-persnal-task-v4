@@ -159,6 +159,12 @@ public class FeedService {
                 .toList();
     }
 
+    /**
+     * 로그인한 회원이 좋아요한 게시글 목록 조회
+     * @param page 페이지 정보
+     * @param user 회원 정보
+     * @return 게시글 목록
+     */
     @Transactional(readOnly = true)
     public Page<FeedResponseDto> getLikeFeeds(PageDTO page, User user) {
         return feedRepository.getLikeFeeds(user, page.toPageable()).map(FeedResponseDto::new);

@@ -1,6 +1,6 @@
 ## Variables
-@feedId = 6
-@replyId = 1
+@feedId = 1
+@replyId = 8
 
 ### 피드 좋아요 추가
 POST http://localhost:8080/feed/{{feedId}}/likes

@@ -91,7 +91,8 @@ public class SecurityConfig {
                                 .requestMatchers("/feed/following").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/users/{userId}/follower").permitAll() // 팔로워 조회
                                 .requestMatchers(HttpMethod.GET, "/users/{userId}/following").permitAll() // 팔로잉 조회
-                                .requestMatchers(HttpMethod.GET, "/feed/{{feedId}}/reply/**").permitAll() // 댓글 조회
+                                .requestMatchers(HttpMethod.GET, "/feed/{feedId}/reply").permitAll() // 댓글 목록 조회
+                                .requestMatchers(HttpMethod.GET, "/feed/{feedId}/reply/{replyId}").permitAll() // 댓글 단건 조회
                                 .requestMatchers("/admin/**").hasAnyRole("ADMIN") // admin
                                 .anyRequest().authenticated()	// 그 외의 모든 요청은 인증 필요
                 )

@@ -8,7 +8,7 @@ import com.sparta.codeplanet.product.entity.Reply;
 import com.sparta.codeplanet.product.entity.likes.FeedLikes;
 import com.sparta.codeplanet.product.entity.likes.ReplyLikes;
 import com.sparta.codeplanet.product.repository.feed.FeedRepository;
-import com.sparta.codeplanet.product.repository.ReplyRepository;
+import com.sparta.codeplanet.product.repository.reply.ReplyRepository;
 import com.sparta.codeplanet.product.repository.likes.FeedLikesRepository;
 import com.sparta.codeplanet.product.repository.likes.ReplyLikesRepository;
 import lombok.RequiredArgsConstructor;

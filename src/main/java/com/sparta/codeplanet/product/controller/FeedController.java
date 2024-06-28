@@ -132,8 +132,9 @@ public class FeedController {
     }
 
     /**
-     * 회원이 좋아요한 게시글 목록 조회
+     * 로그인한 회원이 좋아요한 게시글 목록 조회
      * @param page 페이지
+     * @param size 크기
      * @param userDetails 회원 정보
      * @return 게시글 목록
      */

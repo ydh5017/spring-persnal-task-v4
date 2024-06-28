@@ -2,6 +2,7 @@ package com.sparta.codeplanet.product.controller;
 
 import com.sparta.codeplanet.global.enums.ResponseMessage;
 import com.sparta.codeplanet.global.security.UserDetailsImpl;
+import com.sparta.codeplanet.product.dto.PageDTO;
 import com.sparta.codeplanet.product.dto.ReplyRequestDto;
 import com.sparta.codeplanet.product.dto.ReplyResponseDto;
 import com.sparta.codeplanet.product.dto.ResponseEntityDto;
@@ -119,6 +120,32 @@ public class ReplyController {
                 new ResponseEntityDto<>(
                         ResponseMessage.REPLY_UPDATE_SUCCESS,
                         replyService.updateReply(feedId, replyId, requestDto, userDetails.getUser())
+                )
+        );
+    }
+
+    /**
+     * 로그인한 회원이 좋아요한 댓글 목록 조회
+     * @param page 페이지
+     * @param size 크기
+     * @param userDetails 화원 정보
+     * @return 댓글 목록
+     */
+    @GetMapping("/reply/like")
+    public ResponseEntity<?> getLikeReplies(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "5") int size,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity.ok(
+                new ResponseEntityDto<>(
+                        ResponseMessage.REPLY_READ_SUCCESS,
+                        replyService.getLikeReplies(
+                                PageDTO.builder()
+                                        .page(page)
+                                        .size(size)
+                                        .build(),
+                                userDetails.getUser()
+                        )
                 )
         );
     }

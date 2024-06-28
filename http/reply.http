@@ -1,6 +1,6 @@
 ## Variables
 @feedId = 1
-@replyId = 1
+@replyId = 5
 @content = 내용테스트
 @content_update = 내용 update
 
@@ -13,12 +13,16 @@ Content-Type: application/json
   "content" : "{{content}}"
 }
 
-### 댓글 조회
+### 댓글 목록 조회
 GET http://localhost:8080/feed/{{feedId}}/reply
 accessToken: {{accessToken}}
 
 ### 댓글 단건 조회
 GET http://localhost:8080/feed/{{feedId}}/reply/{{replyId}}
+accessToken: {{accessToken}}
+
+### 회원이 좋아요한 댓글 목록 조회
+GET http://localhost:8080/feed/{{feedId}}/reply/like
 accessToken: {{accessToken}}
 
 ### 댓글 수정

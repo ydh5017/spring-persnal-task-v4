@@ -2,14 +2,16 @@ package com.sparta.codeplanet.product.service;
 
 import com.sparta.codeplanet.global.enums.ErrorType;
 import com.sparta.codeplanet.global.exception.CustomException;
+import com.sparta.codeplanet.product.dto.PageDTO;
 import com.sparta.codeplanet.product.dto.ReplyRequestDto;
 import com.sparta.codeplanet.product.dto.ReplyResponseDto;
 import com.sparta.codeplanet.product.entity.Feed;
 import com.sparta.codeplanet.product.entity.Reply;
 import com.sparta.codeplanet.product.entity.User;
 import com.sparta.codeplanet.product.repository.feed.FeedRepository;
-import com.sparta.codeplanet.product.repository.ReplyRepository;
+import com.sparta.codeplanet.product.repository.reply.ReplyRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -73,5 +75,15 @@ public class ReplyService {
         return replyRepository.findById(replyId)
                 .map(ReplyResponseDto::new)
                 .orElseThrow(()-> new CustomException(ErrorType.NOT_FOUND_REPLY));
+    }
+
+    /**
+     * 로그인한 회원이 좋아요한 댓글 목록 조회
+     * @param page 페이지 정보
+     * @param user 회원 정보
+     * @return 댓글 목록
+     */
+    public Page<ReplyResponseDto> getLikeReplies(PageDTO page, User user) {
+        return replyRepository.getLikeReplies(user, page.toPageable()).map(ReplyResponseDto::new);
     }
 }
