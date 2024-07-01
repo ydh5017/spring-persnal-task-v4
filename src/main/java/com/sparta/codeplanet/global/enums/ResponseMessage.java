@@ -11,6 +11,7 @@ public enum ResponseMessage {
     SEND_EMAIL_SUCCESS("승인 코드가 발송되었습니다."),
     VERIFY_AUTH_CODE_SUCCESS("회원가입 승인 처리되었습니다."),
     SUCCESS_LOGIN("로그인 완료"),
+    USER_READ_SUCCESS("회원 프로필 조회에 성공하였습니다."),
     FOLLOW_SUCCESS("님을 팔로우 하였습니다."),
     UNFOLLOW_SUCCESS("님을 언팔로우 하였습니다."),
     FOLLOWING_LIST("팔로잉 목록 조회에 성공하였습니다."),

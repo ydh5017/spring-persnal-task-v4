@@ -8,4 +8,6 @@ import org.springframework.data.domain.Pageable;
 public interface ReplyRepositoryQuery {
 
     Page<Reply> getLikeReplies(User user, Pageable pageable);
+
+    Long countLikeReplies(User user);
 }

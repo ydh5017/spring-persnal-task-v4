@@ -47,6 +47,10 @@ Content-Type: application/json
   "newPassword":"1qaz2wsx3edc!@#"
 }
 
+### 프로필 조회
+GET http://localhost:8080/users
+accessToken: {{accessToken}}
+
 ### 리프레시 토큰 테스트
 POST http://localhost:8080/users/reissue
 refresh-token:{{Refresh-Token}}

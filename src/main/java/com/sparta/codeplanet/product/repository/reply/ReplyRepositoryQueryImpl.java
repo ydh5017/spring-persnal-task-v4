@@ -37,6 +37,11 @@ public class ReplyRepositoryQueryImpl implements ReplyRepositoryQuery {
         return PageableExecutionUtils.getPage(replies, pageable, ()->totalSize);
     }
 
+    @Override
+    public Long countLikeReplies(User user) {
+        return countQuery(user).fetch().get(0);
+    }
+
     private BooleanExpression likeUserEq(User user) {
         return Objects.nonNull(user) ? reply.likesList.any().user.eq(user) : null;
     }

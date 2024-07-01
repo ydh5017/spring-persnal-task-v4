@@ -35,6 +35,11 @@ public class FeedRepositoryQueryImpl implements FeedRepositoryQuery {
         return PageableExecutionUtils.getPage(feeds, pageable, ()-> totalSize);
     }
 
+    @Override
+    public Long countLikeFeeds(User user) {
+        return countQuery(user).fetch().get(0);
+    }
+
     private <T> JPAQuery<T> query(Expression<T> expr, User user) {
         return jpaQueryFactory.select(expr)
                 .from(feed)

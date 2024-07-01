@@ -8,4 +8,6 @@ import org.springframework.data.domain.Pageable;
 public interface FeedRepositoryQuery {
 
     Page<Feed> getLikeFeeds(User user, Pageable pageable);
+
+    Long countLikeFeeds(User user);
 }

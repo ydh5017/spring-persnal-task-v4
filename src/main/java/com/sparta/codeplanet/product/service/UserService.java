@@ -5,10 +5,13 @@ import com.sparta.codeplanet.global.enums.Status;
 import com.sparta.codeplanet.global.exception.CustomException;
 import com.sparta.codeplanet.product.dto.SignupRequestDto;
 import com.sparta.codeplanet.product.dto.UpdatePasswordReq;
+import com.sparta.codeplanet.product.dto.UserProfileDto;
 import com.sparta.codeplanet.product.entity.User;
 import com.sparta.codeplanet.product.entity.UserPasswordLog;
 import com.sparta.codeplanet.product.repository.UserPasswordLogRepersitory;
 import com.sparta.codeplanet.product.repository.UserRepository;
+import com.sparta.codeplanet.product.repository.feed.FeedRepository;
+import com.sparta.codeplanet.product.repository.reply.ReplyRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +29,8 @@ public class UserService {
     private final UserPasswordLogRepersitory userPasswordLogRepersitory;
     private final CompanyService companyService;
     private final PasswordEncoder passwordEncoder;
+    private final FeedRepository feedRepository;
+    private final ReplyRepository replyRepository;
 
     @Transactional
     public User signup(SignupRequestDto requestDto) {
@@ -119,6 +124,28 @@ public class UserService {
         updateUser.updatePassword(hashedPassword);
 
         userRepository.save(updateUser);
+    }
+
+    /**
+     * 프로필 조회
+     * @param user 회원 정보
+     * @return 프로필 정보
+     */
+    public UserProfileDto getProfile(User user) {
+        User saveUser = getUserById(user.getId());
+        saveUser.verifyStatusWhenFollow();
+
+        Long likeFeedCnt = feedRepository.countLikeFeeds(saveUser);
+        Long likeReplyCnt = replyRepository.countLikeReplies(saveUser);
+
+        return UserProfileDto.builder()
+                .companyName(saveUser.getCompany().getName())
+                .email(saveUser.getEmail())
+                .nickname(saveUser.getNickname())
+                .intro(saveUser.getIntro())
+                .likeFeedCnt(likeFeedCnt)
+                .likeReplyCnt(likeReplyCnt)
+                .build();
     }
 
     public User findUserByUsername(String username) {

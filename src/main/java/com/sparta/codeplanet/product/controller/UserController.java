@@ -1,6 +1,8 @@
 package com.sparta.codeplanet.product.controller;
 
+import com.sparta.codeplanet.global.enums.ResponseMessage;
 import com.sparta.codeplanet.global.security.UserDetailsImpl;
+import com.sparta.codeplanet.product.dto.ResponseEntityDto;
 import com.sparta.codeplanet.product.dto.UpdatePasswordReq;
 import com.sparta.codeplanet.product.service.UserService;
 import com.sparta.codeplanet.product.service.UserUpdateRequestDto;
@@ -32,4 +34,18 @@ public class UserController {
         return ResponseEntity.ok("Password updated");
     }
 
+    /**
+     * 프로필 조회
+     * @param userDetails 회원 정보
+     * @return 프로필 정보
+     */
+    @GetMapping
+    public ResponseEntity<?> getProfile(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity.ok(
+                new ResponseEntityDto<>(
+                        ResponseMessage.USER_READ_SUCCESS,
+                        userService.getProfile(userDetails.getUser())
+                )
+        );
+    }
 }
