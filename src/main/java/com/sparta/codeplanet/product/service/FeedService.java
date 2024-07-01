@@ -135,28 +135,35 @@ public class FeedService {
     /**
      * 로그인한 회원의 팔로잉 회원 게시글 목록 조회
      * @param user 로그인한 회원
-     * @param page 페이지
-     * @param size 크기
+     * @param page 페이징 정보
      * @return 게시글 목록
      */
-    public List<FeedResponseDto> getFollowingFeed(User user, int page, int size) {
+    public List<FeedResponseDto> getFollowingFeed(User user, PageDTO page) {
         User fromUser = userService.getUserById(user.getId());
 
-        List<Long> followList = fromUser.getFollowingList().stream()
-                .map(f->f.getToUser().getId())
-                .toList();
+//        List<Long> followList = fromUser.getFollowingList().stream()
+//                .map(f->f.getToUser().getId())
+//                .toList();
+//
+//        if (followList.isEmpty()){
+//            throw new CustomException(ErrorType.NOT_FOUND_FEED);
+//        }
+//
+//        return feedRepository.findAllByUserIdIn(followList, page.toPageable())
+//                .getContent()
+//                .stream()
+//                .map(FeedResponseDto::new)
+//                .toList();
 
-        if (followList.isEmpty()){
-            throw new CustomException(ErrorType.NOT_FOUND_FEED);
-        }
-
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
-
-        return feedRepository.findAllByUserIdIn(followList, pageable)
-                .getContent()
-                .stream()
+        List<FeedResponseDto> feeds = feedRepository.getFollowingFeeds(fromUser, page).stream()
                 .map(FeedResponseDto::new)
                 .toList();
+
+        if (feeds.isEmpty()) {
+            log.info("@@@@@@@@@@@@@@@@");
+        }
+
+        return feeds;
     }
 
     /**

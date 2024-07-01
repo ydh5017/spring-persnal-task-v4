@@ -84,6 +84,12 @@ public class ReplyService {
      * @return 댓글 목록
      */
     public Page<ReplyResponseDto> getLikeReplies(PageDTO page, User user) {
-        return replyRepository.getLikeReplies(user, page.toPageable()).map(ReplyResponseDto::new);
+        Page<ReplyResponseDto> replies = replyRepository
+                .getLikeReplies(user, page.toPageable()).map(ReplyResponseDto::new);
+
+        if (replies.isEmpty()) {
+            throw new CustomException(ErrorType.NONE_LIKES_REPLY);
+        }
+        return replies;
     }
 }

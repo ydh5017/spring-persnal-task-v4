@@ -2,12 +2,14 @@ package com.sparta.codeplanet.product.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import java.util.Objects;
 
+@Getter
 @Builder
 @AllArgsConstructor
 public class PageDTO {

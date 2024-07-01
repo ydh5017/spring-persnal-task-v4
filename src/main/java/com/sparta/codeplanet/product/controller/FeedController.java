@@ -125,9 +125,17 @@ public class FeedController {
     @GetMapping("/following")
     public ResponseEntity<?> getFollowingFeed(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size) {
-        List<FeedResponseDto> responseDtoList = feedService.getFollowingFeed(userDetails.getUser(), page, size);
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "createdAt") String sortBy) {
+        List<FeedResponseDto> responseDtoList = feedService
+                .getFollowingFeed(
+                        userDetails.getUser(),
+                        PageDTO.builder()
+                                .page(page)
+                                .size(size)
+                                .sortBy(sortBy)
+                                .build());
         return ResponseEntity.ok(responseDtoList);
     }
 
