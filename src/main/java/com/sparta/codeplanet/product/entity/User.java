@@ -63,7 +63,8 @@ public class User extends TimeStamp {
     private Boolean refresh;
 
     @Builder
-    public User(String username,String nickname, String hashedPassword, String email,Company company, String intro, Status status) {
+    public User(Long id, String username,String nickname, String hashedPassword, String email,Company company, String intro, Status status) {
+        this.id = id;
         this.username = username;
         this.password = hashedPassword;
         this.nickname = nickname;

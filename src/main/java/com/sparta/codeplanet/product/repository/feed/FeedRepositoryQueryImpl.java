@@ -1,7 +1,6 @@
 package com.sparta.codeplanet.product.repository.feed;
 
 import com.querydsl.core.types.Expression;
-import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Wildcard;
@@ -12,7 +11,6 @@ import com.sparta.codeplanet.product.dto.PageDTO;
 import com.sparta.codeplanet.product.entity.Feed;
 import com.sparta.codeplanet.product.entity.User;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
@@ -24,7 +22,6 @@ import static com.sparta.codeplanet.product.entity.QFeed.feed;
 import static com.sparta.codeplanet.product.entity.QFollow.follow;
 
 @RequiredArgsConstructor
-@Slf4j
 public class FeedRepositoryQueryImpl implements FeedRepositoryQuery {
 
     private final JPAQueryFactory jpaQueryFactory;
@@ -49,7 +46,6 @@ public class FeedRepositoryQueryImpl implements FeedRepositoryQuery {
 
     @Override
     public List<Feed> getFollowingFeeds(User fromUser, PageDTO pageDTO) {
-        log.info(pageDTO.getSortBy());
         JPAQuery<Feed> query = getFollowingFeedQuery(feed, fromUser)
                 .offset(pageDTO.toPageable().getOffset())
                 .limit(pageDTO.toPageable().getPageSize())

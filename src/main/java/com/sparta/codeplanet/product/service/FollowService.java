@@ -114,14 +114,10 @@ public class FollowService {
         User toUser = userService.getUserById(userId);
         toUser.verifyStatusWhenFollow();
 
-        log.info("deleteFollow : " + toUser.getNickname());
-
         Follow follow = followRepository.findByFromUserAndToUser(user, toUser)
                 .orElseThrow(() -> new CustomException(ErrorType.NOT_FOLLOWING));
 
         followRepository.delete(follow);
-
-        log.info("delete success");
 
         return toUser.getNickname();
     }

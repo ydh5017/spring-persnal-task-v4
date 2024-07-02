@@ -155,15 +155,9 @@ public class FeedService {
 //                .map(FeedResponseDto::new)
 //                .toList();
 
-        List<FeedResponseDto> feeds = feedRepository.getFollowingFeeds(fromUser, page).stream()
+        return feedRepository.getFollowingFeeds(fromUser, page).stream()
                 .map(FeedResponseDto::new)
                 .toList();
-
-        if (feeds.isEmpty()) {
-            log.info("@@@@@@@@@@@@@@@@");
-        }
-
-        return feeds;
     }
 
     /**

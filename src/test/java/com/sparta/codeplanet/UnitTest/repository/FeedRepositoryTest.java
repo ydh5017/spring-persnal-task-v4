@@ -1,6 +1,7 @@
 package com.sparta.codeplanet.UnitTest.repository;
 
 import com.sparta.codeplanet.config.TestConfig;
+import com.sparta.codeplanet.product.dto.FeedResponseDto;
 import com.sparta.codeplanet.product.dto.PageDTO;
 import com.sparta.codeplanet.product.entity.Feed;
 import com.sparta.codeplanet.product.entity.User;
@@ -14,6 +15,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.test.context.ActiveProfiles;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -46,5 +49,19 @@ public class FeedRepositoryTest {
 
         // then
         assertEquals(feeds.getSize(), 5);
+    }
+
+    @Test
+    void getFollowingFeed() {
+        User user = userRepository.findById(1L).orElse(null);
+        PageDTO pageDTO = PageDTO.builder()
+                .page(1)
+                .size(5)
+                .sortBy("title")
+                .build();
+
+        List<FeedResponseDto> feeds = feedRepository.getFollowingFeeds(user, pageDTO).stream()
+                .map(FeedResponseDto::new)
+                .toList();
     }
 }
