@@ -4,9 +4,10 @@ import com.sparta.codeplanet.global.enums.ErrorType;
 import com.sparta.codeplanet.global.enums.Status;
 import com.sparta.codeplanet.global.exception.CustomException;
 import com.sparta.codeplanet.product.dto.FollowResponseDto;
+import com.sparta.codeplanet.product.dto.FollowerTop10Dto;
 import com.sparta.codeplanet.product.entity.Follow;
 import com.sparta.codeplanet.product.entity.User;
-import com.sparta.codeplanet.product.repository.FollowRepository;
+import com.sparta.codeplanet.product.repository.follow.FollowRepository;
 import com.sparta.codeplanet.product.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -120,6 +121,16 @@ public class FollowService {
         followRepository.delete(follow);
 
         return toUser.getNickname();
+    }
+
+    /**
+     * 팔로워 TOP 10 목록 조회
+     * @return 팔로워 TOP 10
+     */
+    public List<FollowerTop10Dto> getFollowerTop10() {
+        return followRepository.getFollowerTop10().stream()
+                .map(FollowerTop10Dto::new)
+                .toList();
     }
 
     /**

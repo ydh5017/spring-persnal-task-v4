@@ -1,10 +1,9 @@
 package com.sparta.codeplanet.UnitTest.service;
 
 import com.sparta.codeplanet.global.enums.Status;
-import com.sparta.codeplanet.product.dto.FollowResponseDto;
 import com.sparta.codeplanet.product.entity.Follow;
 import com.sparta.codeplanet.product.entity.User;
-import com.sparta.codeplanet.product.repository.FollowRepository;
+import com.sparta.codeplanet.product.repository.follow.FollowRepository;
 import com.sparta.codeplanet.product.repository.UserRepository;
 import com.sparta.codeplanet.product.service.FollowService;
 import com.sparta.codeplanet.product.service.UserService;
@@ -14,7 +13,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;

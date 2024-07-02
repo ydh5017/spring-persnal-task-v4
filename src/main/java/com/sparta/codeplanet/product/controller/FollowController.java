@@ -83,4 +83,18 @@ public class FollowController {
 
         return ResponseEntity.ok(unFollowUsername + ResponseMessage.UNFOLLOW_SUCCESS.getMessage());
     }
+
+    /**
+     * 팔로워 TOP 10 목록 조회
+     * @return 팔로워 TOP 10
+     */
+    @GetMapping("/followerTop10")
+    public ResponseEntity<?> getFollowerTop10() {
+        return ResponseEntity.ok(
+                new ResponseEntityDto<>(
+                        ResponseMessage.FOLLOWER_TOP10_READ_SUCCESS,
+                        followService.getFollowerTop10()
+                )
+        );
+    }
 }

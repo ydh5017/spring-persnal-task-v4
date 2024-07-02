@@ -16,6 +16,7 @@ public enum ResponseMessage {
     UNFOLLOW_SUCCESS("님을 언팔로우 하였습니다."),
     FOLLOWING_LIST("팔로잉 목록 조회에 성공하였습니다."),
     FOLLOWER_LIST("팔로워 목록 조회에 성공하였습니다."),
+    FOLLOWER_TOP10_READ_SUCCESS("팔로워 TOP 10 목록 조회 성공하였습니다."),
 
     FEED_UPDATE_SUCCESS("게시글을 수정하였습니다."),
     FEED_CREATE_SUCCESS("게시글을 작성하였습니다."),

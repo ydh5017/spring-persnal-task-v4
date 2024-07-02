@@ -16,3 +16,7 @@ accessToken: {{accessToken}}
 ### 팔로워 목록 조회
 GET http://localhost:8080/users/{{userId}}/follower
 accessToken: {{accessToken}}
+
+### 팔로워 TOP 10 목록 조회
+GET http://localhost:8080/users/followerTop10
+accessToken: {{accessToken}}
